@@ -5,11 +5,11 @@
 window.gamecore =
 {
     hasOwn:Object.prototype.hasOwnProperty,
+    objToString:Object.prototype.toString,
 
     isFunction:function (obj)
     {
-        // return Object.prototype.toString.call(obj) === "[object Function]";
-       return !!(obj && obj.constructor && obj.call && obj.apply);
+       return this.isObject(obj) && objToString.call(obj) == '[object Function]';
     },
 
     isWindow:function (obj)
@@ -19,17 +19,18 @@ window.gamecore =
 
     isArray:Array.isArray || function (obj)
     {
-        return (obj.constructor === Array);
+        return this.isObject(obj) && ((typeof obj.length == 'number' && obj.length >= 0) && objToString.call(obj) == '[object Array]');
     },
 
     isString:function (obj)
     {
-        return (typeof obj == 'string');
+        return !!obj && objToString.call(obj) == '[object String]';
     },
 
     isObject:function (obj)
     {
-        return obj === Object(obj);
+        var type = typeof obj;
+        return !!obj && (type == 'object' || type == 'function');
     },
 
     isPlainObject:function (obj)
@@ -643,7 +644,3 @@ gamecore.extend({
         return promise;
     }
 });
-
-
-
-
